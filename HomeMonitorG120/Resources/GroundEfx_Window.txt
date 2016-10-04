@@ -1,0 +1,21 @@
+<Glide Version="1.0.7">
+  <Window Name="GroundEfx_Window" Width="320" Height="240" BackColor="000000">
+    
+    <Button Name="btnGndEfxShow" X="137" Y="180" Width="80" Height="40" Alpha="255" Text="Show Off" Font="2" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/>
+    <Button Name="btnBack" X="10" Y="190" Width="50" Height="40" Alpha="255" Text="Back" Font="2" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/>
+   
+    <TextBlock Name="txtBlGndEfx" X="110" Y="1" Width="150" Height="40" Alpha="255" Text="Ground Efx" TextAlign="Center" TextVerticalAlign="Middle" Font="6" FontColor="FFFFFF" BackColor="000000" ShowBackColor="False"/>
+    <TextBlock Name="txtBlLeft" X="5" Y="57" Width="50" Height="32" Alpha="255" Text="LEFT:" TextAlign="Center" TextVerticalAlign="Middle" Font="4" FontColor="FFFFFF" BackColor="000000" ShowBackColor="False"/>
+    <TextBlock Name="txtBlRight" X="5" Y="121" Width="60" Height="32" Alpha="255" Text="RIGHT:" TextAlign="Center" TextVerticalAlign="Middle" Font="4" FontColor="FFFFFF" BackColor="000000" ShowBackColor="False"/>
+
+    <RadioButton Name="radBtnGreenLeft" X="185" Y="50" Width="40" Height="40" Alpha="255" Value="" Checked="False" GroupName="lRadBtnRadioGrp" ShowBackground="True" Color="d4d4d4" OutlineColor="b8b8b8" SelectedColor="358bf6" SelectedOutlineColor="002dff"/>
+    <RadioButton Name="radBtnRedLeft" X="130" Y="50" Width="40" Height="40" Alpha="255" Value="" Checked="False" GroupName="lRadBtnRadioGrp" ShowBackground="True" Color="d4d4d4" OutlineColor="b8b8b8" SelectedColor="358bf6" SelectedOutlineColor="002dff"/>
+    <RadioButton Name="radBtnBlueLeft" X="240" Y="50" Width="40" Height="40" Alpha="255" Value="" Checked="False" GroupName="lRadBtnRadioGrp" ShowBackground="True" Color="d4d4d4" OutlineColor="b8b8b8" SelectedColor="358bf6" SelectedOutlineColor="002dff"/>
+    <RadioButton Name="radBtnBlueRight" X="240" Y="115" Width="40" Height="40" Alpha="255" Value="" Checked="False" GroupName="rRadBtnRadioGrp" ShowBackground="True" Color="d4d4d4" OutlineColor="b8b8b8" SelectedColor="358bf6" SelectedOutlineColor="002dff"/>
+    <RadioButton Name="radBtnRedRight" X="130" Y="115" Width="40" Height="40" Alpha="255" Value="" Checked="False" GroupName="rRadBtnRadioGrp" ShowBackground="True" Color="d4d4d4" OutlineColor="b8b8b8" SelectedColor="358bf6" SelectedOutlineColor="002dff"/>
+    <RadioButton Name="radBtnGreenRight" X="185" Y="115" Width="40" Height="40" Alpha="255" Value="" Checked="False" GroupName="rRadBtnRadioGrp" ShowBackground="True" Color="d4d4d4" OutlineColor="b8b8b8" SelectedColor="358bf6" SelectedOutlineColor="002dff"/>
+    <RadioButton Name="radBtnLeftOff" X="75" Y="50" Width="40" Height="40" Alpha="255" Value="" Checked="True" GroupName="lRadBtnRadioGrp" ShowBackground="True" Color="d4d4d4" OutlineColor="b8b8b8" SelectedColor="358bf6" SelectedOutlineColor="002dff"/>
+    <RadioButton Name="radBtnRightOff" X="75" Y="115" Width="40" Height="40" Alpha="255" Value="" Checked="True" GroupName="rRadBtnRadioGrp" ShowBackground="True" Color="d4d4d4" OutlineColor="b8b8b8" SelectedColor="358bf6" SelectedOutlineColor="002dff"/>
+   
+  </Window>
+</Glide>

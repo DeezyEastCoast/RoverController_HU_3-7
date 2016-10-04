@@ -1,0 +1,26 @@
+<Glide Version="1.0.7">
+
+	<Window Name="Main_Window" Width="320" Height="240" BackColor="000000">
+
+    <Button Name="btnSettings" X="25" Y="145" Width="80" Height="32" Alpha="255" Text="Settings" Font="2" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/>
+    <Button Name="btnGndEfx" X="25" Y="190" Width="80" Height="32" Alpha="255" Text="Ground Efx" Font="4" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/>
+    <Button Name="btnPics" X="120" Y="145" Width="80" Height="32" Alpha="255" Text="Pictures" Font="4" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/>
+	<Button Name="btnCamera" X="120" Y="190" Width="80" Height="32" Alpha="255" Text="Camera" Font="4" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/>
+	<Button Name="btnTalk" X="215" Y="145" Width="80" Height="32" Alpha="255" Text="Talk" Font="4" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/>
+    <Button Name="btnVideo" X="215" Y="190" Width="80" Height="32" Alpha="255" Text="Video" Font="4" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/>
+    
+    <TextBlock Name="txtTitle" X="40" Y="0" Width="170" Height="22" Alpha="255" Text="OakHill Rover Controller" TextAlign="Right" TextVerticalAlign="Middle" Font="2" FontColor="FFFFFF" BackColor="000000" ShowBackColor="False"/>
+    
+	<TextBlock Name="txtCntrlBattery" X="20" Y="25" Width="110" Height="22" Alpha="255" Text="Battery: 0%"    TextAlign="Left" TextVerticalAlign="Top" Font="2" FontColor="F0FF0F" BackColor="000000" ShowBackColor="False"/>
+	<TextBlock Name="txtRoverBattery" X="20" Y="50" Width="110" Height="22" Alpha="255" Text="  Rover: 0"     TextAlign="Left" TextVerticalAlign="Top" Font="2" FontColor="FF00FF" BackColor="000000" ShowBackColor="False"/> 
+	<TextBlock Name="txtRoverHeading" X="20" Y="75" Width="110" Height="22" Alpha="255" Text="Heading: 0 deg" TextAlign="Left" TextVerticalAlign="Top" Font="2" FontColor="FF00FF" BackColor="000000" ShowBackColor="False"/>
+	<TextBlock Name="txtRoverRange"   X="20" Y="100" Width="110" Height="22" Alpha="255" Text=" Range: 0 in"  TextAlign="Left" TextVerticalAlign="Top" Font="2" FontColor="FF00FF" BackColor="000000" ShowBackColor="False"/>
+	<TextBlock Name="txtRoverTemp"    X="145" Y="25" Width="110" Height="22" Alpha="255" Text="  Temp: 0 F"   TextAlign="Left" TextVerticalAlign="Top" Font="2" FontColor="FF00FF" BackColor="000000" ShowBackColor="False"/>
+	<TextBlock Name="txtRoverPress"   X="145" Y="50" Width="110" Height="22" Alpha="255" Text=" Press: 0 psi" TextAlign="Left" TextVerticalAlign="Top" Font="2" FontColor="FF00FF" BackColor="000000" ShowBackColor="False"/>
+	<TextBlock Name="txtRoverLat"     X="145" Y="75" Width="110" Height="22" Alpha="255" Text=" Lat: 0" TextAlign="Left" TextVerticalAlign="Top" Font="2" FontColor="FF00FF" BackColor="000000" ShowBackColor="False"/>
+	<TextBlock Name="txtRoverLon"     X="145" Y="100" Width="110" Height="22" Alpha="255" Text=" Lon: 0" TextAlign="Left" TextVerticalAlign="Top" Font="2" FontColor="FF00FF" BackColor="000000" ShowBackColor="False"/>
+
+	<ProgressBar Name="pBarConnected" X="50" Y="3" Width="16" Height="16" Alpha="255" Direction="Right" MaxValue="1" Value="0"/>
+
+  </Window>
+</Glide>

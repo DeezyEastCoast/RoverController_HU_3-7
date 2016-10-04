@@ -1,0 +1,18 @@
+<Glide Version="1.0.7">
+
+  <Window Name="EcoCam_Window" Width="320" Height="240" BackColor="000000">
+
+    <Button Name="btnBack" X="25" Y="185" Width="80" Height="32" Alpha="255" Text="Back" Font="4" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/>
+    <Button Name="btnVideo" X="25" Y="135" Width="80" Height="32" Alpha="255" Text="Video" Font="4" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/>
+    <Button Name="btnSerialCam" X="120" Y="135" Width="80" Height="32" Alpha="255" Text="Serial Cam" Font="4" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/>
+    <Button Name="btnSingleCam" X="215" Y="135" Width="80" Height="32" Alpha="255" Text="Single Cam" Font="4" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/>
+    <Button Name="btnStop" X="215" Y="185" Width="80" Height="32" Alpha="255" Text="Stop" Font="4" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/>
+
+    <TextBlock Name="txtTitle" X="40" Y="0" Width="170" Height="22" Alpha="255" Text="Eco Cam Control" TextAlign="Right" TextVerticalAlign="Middle" Font="2" FontColor="FFFFFF" BackColor="000000" ShowBackColor="False"/>
+    <TextBlock Name="txtStatus" X="20" Y="25" Width="110" Height="22" Alpha="255" Text="Status: " TextAlign="Left" TextVerticalAlign="Top" Font="2" FontColor="F0FF0F" BackColor="000000" ShowBackColor="False"/>
+
+    <ProgressBar Name="pBarConnected" X="50" Y="3" Width="16" Height="16" Alpha="255" Direction="Right" MaxValue="1" Value="0"/>
+
+  </Window>
+
+</Glide>
