@@ -7,9 +7,13 @@
     <TextBlock Name="txtBlTriggerOut" X="140" Y="180" Width="45" Height="22" Alpha="255" Text="4095" TextAlign="Left" TextVerticalAlign="Top" Font="2" FontColor="F0F0FF" BackColor="0" ShowBackColor="False"/>
     <TextBlock Name="txtBlTrigScaled" X="185" Y="180" Width="35" Height="22" Alpha="255" Text="txt" TextAlign="Left" TextVerticalAlign="Top" Font="2" FontColor="F0F0FF" BackColor="0" ShowBackColor="False"/>
     <TextBlock Name="txtBlWhlScaled" X="185" Y="205" Width="35" Height="22" Alpha="255" Text="txt" TextAlign="Left" TextVerticalAlign="Top" Font="2" FontColor="FF00FF" BackColor="000000" ShowBackColor="False"/>
-    <Button Name="btnBack" X="20" Y="180" Width="50" Height="40" Alpha="255" Text="Back" Font="2" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/>
-    <CheckBox Name="chkBoxSpeedLimit" X="20" Y="25" Width="32" Height="32" Alpha="255" Checked="False"/>
-    <TextBlock Name="txtBlSpeedLimit" X="58" Y="35" Width="70" Height="25" Alpha="255" Text="Speed Limit" TextAlign="Left" TextVerticalAlign="Top" Font="2" FontColor="0FFFF" BackColor="000000" ShowBackColor="False"/>
+
+	<Button Name="btnMode" X="20" Y="65" Width="55" Height="32" Alpha="255" Text="Manual" Font="1" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/>
+	<Button Name="btnBack" X="20" Y="184" Width="50" Height="32" Alpha="255" Text="Back" Font="2" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/>
+    
+	<CheckBox Name="chkBoxSpeedLimit" X="20" Y="25" Width="24" Height="24" Alpha="255" Checked="False"/>
+
+	<TextBlock Name="txtBlSpeedLimit" X="58" Y="35" Width="70" Height="25" Alpha="255" Text="Speed Limit" TextAlign="Left" TextVerticalAlign="Top" Font="2" FontColor="0FFFF" BackColor="000000" ShowBackColor="False"/>
     
   </Window>
 </Glide>

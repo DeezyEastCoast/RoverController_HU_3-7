@@ -44,27 +44,56 @@ namespace OakhillLandroverController
         // Window references.
         public static Window _mainWindow = new Window();
         public static Window pictureWindow = new Window();
-        public static SetupWindow diagnosticWindow;
-        public static GroundEfxWindow gEfxWindow;
+        public static SetupWindow setupWindow;
+        public static OutputsWindow outputsWindow;
         public static EcoCamWindow ecoCamWindow;
 
         static ProgressBar _pBarConnected;
         static TextBlock _txtTitle;
+
         static TextBlock _txtCntrlBattery;
+        static TextBlock _txtCntrlBatteryOut;
+        
         static TextBlock _txtRoverBattery;
+        static TextBlock _txtRoverBatteryOut;
+        
         static TextBlock _txtRoverRange;
+        static TextBlock _txtRoverRangeOut;
+        
         static TextBlock _txtRoverHeading;
+        static TextBlock _txtRoverHeadingOut;
+        
         static TextBlock _txtRoverTemp;
+        static TextBlock _txtRoverTempOut;
+        
         static TextBlock _txtRoverPress;
+        static TextBlock _txtRoverPressOut;
+        
         static TextBlock _txtRoverLat;
+        static TextBlock _txtRoverLatOut;
+        
         static TextBlock _txtRoverLon;
+        static TextBlock _txtRoverLonOut;
+
+        static TextBlock _txtWpDist;
+        static TextBlock _txtWpDistOut;
+
+        static TextBlock _txtTargetHead;
+        static TextBlock _txtTargetHeadOut;
+        
+        static TextBlock _txtWpSpeedDir;
+        static TextBlock _txtWpSpeedDirOut;
+        
+        static TextBlock _txtTargetWpNum;
+        static TextBlock _txtTargetWpNumOut;
+
+        static TextBlock _txtRovMode;
+        static TextBlock _txtRovModeOut;
 
         static GHI.Glide.UI.Button _btnSettings;
-        static GHI.Glide.UI.Button _btnPics;
-        static GHI.Glide.UI.Button _btnGndEfx;
-        static GHI.Glide.UI.Button _btnTalk;
-        static GHI.Glide.UI.Button _btnCamera;
-        static GHI.Glide.UI.Button _btnVideo;
+        static GHI.Glide.UI.Button _btnOutputs;
+        static GHI.Glide.UI.Button _btnInputs;
+        static GHI.Glide.UI.Button _btnMode;
 
         #endregion
 
@@ -72,7 +101,9 @@ namespace OakhillLandroverController
 
         static byte[] roverData = new byte[] { (byte)'$', 0, 0, (byte)',', 0, 0, (byte)',', 0, 0, (byte)',', 0, 0, (byte)',', 0, 0, (byte)',', 0, 0, (byte)',', (byte)'*', 0, 0, 0x0D, 0x0A };
         //static char[] ps2Data = new char[] { '$', '0', '0', ',', '0', '0', ',', '0', '0', ',', '0', '0', ',', '0', '0', ',', '0', '0', ',', '*', '0', '0', '\r', '\n' };
-        static char[] ps2Data = new char[] { '$', 'O', 'J', 'C', ',', '0', '0', ',', '0', '0', ',', '0', '0', '*', '0', '0', '\r', '\n' };
+        static char[] manualCmdOutput = new char[] { '$', 'O', 'J', 'C', ',', '0', '0', ',', '0', '0', ',', '0', '0', '*', '0', '0', '\r', '\n' };
+        static char[] autoCmdOutput = new char[] {'$','O','A','C',',','0','0','*','0','0','\r','\n'};
+        static char[] compassCmdOutput = new char[] { '$', 'O', 'C', 'C', ',', '0', '0', '*', '0', '0', '\r', '\n' };
 
         //char ps2Data[] = {'$'
         //  ,'0','0',',' //
@@ -139,7 +170,6 @@ namespace OakhillLandroverController
         #endregion
 
         #region TIMERS
-        
         //Timers
         public static Timer RoverJoystickControlTimer;
         public static Timer PictureViewerTimer;
@@ -151,6 +181,8 @@ namespace OakhillLandroverController
         #endregion
 
         //static int IDLE_TIME = 20000;
+        public enum DRIVE_MODE { MANUAL = 0, AUTO, COMPASS, LIMIT };
+        public static DRIVE_MODE DRIVE_MODE_ROVER = DRIVE_MODE.MANUAL;
         static int picCounter = 0;
         //static bool roverHeadLights = false;
         //static bool roverTakePicture = false;
@@ -247,9 +279,9 @@ namespace OakhillLandroverController
             // Load the window
             _mainWindow = GlideLoader.LoadWindow(OakhillLandroverController.Resources.GetString(OakhillLandroverController.Resources.StringResources.wndMain));
             //pictureWindow = GlideLoader.LoadWindow(Resources.GetString(Resources.StringResources.Picture_Window));
-            gEfxWindow = new GroundEfxWindow();//gndEfxWindow = GlideLoader.LoadWindow(Resources.GetString(Resources.StringResources.GroundEfx_Window));
+            outputsWindow = new OutputsWindow();//gndEfxWindow = GlideLoader.LoadWindow(Resources.GetString(Resources.StringResources.GroundEfx_Window));
             ecoCamWindow = new EcoCamWindow();
-            diagnosticWindow = new SetupWindow();
+            setupWindow = new SetupWindow();
 
             // Activate touch
             //GlideTouch.Initialize();
@@ -300,46 +332,81 @@ namespace OakhillLandroverController
             _pBarConnected.Value = 0;
 
             _txtCntrlBattery = (TextBlock)_mainWindow.GetChildByName("txtCntrlBattery");
-            _txtCntrlBattery.Text = "Battery: 100%";
+            _txtCntrlBattery.Text = "Battery: ";
+            _txtCntrlBatteryOut = (TextBlock)_mainWindow.GetChildByName("txtCntrlBatteryOut");
+            _txtCntrlBatteryOut.Text = "---%";
 
             _txtRoverBattery = (TextBlock)_mainWindow.GetChildByName("txtRoverBattery");
-            _txtRoverBattery.Text = "Rover: 100%";
+            _txtRoverBattery.Text = "Rover: ";
+            _txtRoverBatteryOut = (TextBlock)_mainWindow.GetChildByName("txtRoverBatteryOut");
+            _txtRoverBatteryOut.Text = "---%";
 
             _txtRoverRange = (TextBlock)_mainWindow.GetChildByName("txtRoverRange");
-            _txtRoverRange.Text = "Range: 0 in.";
+            _txtRoverRange.Text = "Range: ";
+            _txtRoverRangeOut = (TextBlock)_mainWindow.GetChildByName("txtRoverRangeOut");
+            _txtRoverRangeOut.Text = "---in.";
 
             _txtRoverHeading = (TextBlock)_mainWindow.GetChildByName("txtRoverHeading");
-            _txtRoverHeading.Text = "Heading: 0 deg";
+            _txtRoverHeading.Text = "Head: ";
+            _txtRoverHeadingOut = (TextBlock)_mainWindow.GetChildByName("txtRoverHeadingOut");
+            _txtRoverHeadingOut.Text = "---deg";
 
             _txtRoverTemp = (TextBlock)_mainWindow.GetChildByName("txtRoverTemp");
-            _txtRoverTemp.Text = "Temp: 0 F";
+            _txtRoverTemp.Text = "Temp: ";
+            _txtRoverTempOut = (TextBlock)_mainWindow.GetChildByName("txtRoverTempOut");
+            _txtRoverTempOut.Text = "---F";
 
             _txtRoverPress = (TextBlock)_mainWindow.GetChildByName("txtRoverPress");
-            _txtRoverPress.Text = "Press: 0 psi";
+            _txtRoverPress.Text = "Press: ";
+            _txtRoverPressOut = (TextBlock)_mainWindow.GetChildByName("txtRoverPressOut");
+            _txtRoverPressOut.Text = "---psi";
 
             _txtRoverLat = (TextBlock)_mainWindow.GetChildByName("txtRoverLat");
-            _txtRoverLat.Text = "Lat: 0";
+            _txtRoverLat.Text = "Lat: ";
+            _txtRoverLatOut = (TextBlock)_mainWindow.GetChildByName("txtRoverLatOut");
+            _txtRoverLatOut.Text = "---";
 
             _txtRoverLon = (TextBlock)_mainWindow.GetChildByName("txtRoverLon");
-            _txtRoverLon.Text = "Lon: 0";
+            _txtRoverLon.Text = "Lon: ";
+            _txtRoverLonOut = (TextBlock)_mainWindow.GetChildByName("txtRoverLonOut");
+            _txtRoverLonOut.Text = "---";
+
+            _txtWpDist = (TextBlock)_mainWindow.GetChildByName("txtWpDist");
+            _txtWpDist.Text = "WpDist: ";
+            _txtWpDistOut = (TextBlock)_mainWindow.GetChildByName("txtWpDistOut");
+            _txtWpDistOut.Text = "-m";
+
+            _txtTargetHead = (TextBlock)_mainWindow.GetChildByName("txtTargetHead");
+            _txtTargetHead.Text = "TarHd: ";
+            _txtTargetHeadOut = (TextBlock)_mainWindow.GetChildByName("txtTargetHeadOut");
+            _txtTargetHeadOut.Text = "-deg";
+
+            _txtWpSpeedDir = (TextBlock)_mainWindow.GetChildByName("txtWpSpeedDir");
+            _txtWpSpeedDir.Text = "Spd_Dir:";
+            _txtWpSpeedDirOut = (TextBlock)_mainWindow.GetChildByName("txtWpSpeedDirOut");
+            _txtWpSpeedDirOut.Text = "0_0";
+
+            _txtTargetWpNum = (TextBlock)_mainWindow.GetChildByName("txtTargetWpNum");
+            _txtTargetWpNum.Text = "TarWP: ";
+            _txtTargetWpNumOut = (TextBlock)_mainWindow.GetChildByName("txtTargetWpNumOut");
+            _txtTargetWpNumOut.Text = "0";
+
+            _txtRovMode = (TextBlock)_mainWindow.GetChildByName("txtRovMode");
+            _txtRovMode.Text = "Mode: ";
+            _txtRovModeOut = (TextBlock)_mainWindow.GetChildByName("txtRovModeOut");
+            _txtRovModeOut.Text = "-";
 
             _btnSettings = (GHI.Glide.UI.Button)_mainWindow.GetChildByName("btnSettings");
             _btnSettings.TapEvent += new OnTap(btnSettings_TapEvent);
 
-            _btnPics = (GHI.Glide.UI.Button)_mainWindow.GetChildByName("btnPics");
-            _btnPics.TapEvent += new OnTap(btnPics_TapEvent);
+            _btnOutputs = (GHI.Glide.UI.Button)_mainWindow.GetChildByName("btnOutputs");
+            _btnOutputs.TapEvent += new OnTap(btnOutputs_TapEvent);
 
-            _btnGndEfx = (GHI.Glide.UI.Button)_mainWindow.GetChildByName("btnGndEfx");
-            _btnGndEfx.TapEvent += new OnTap(btnGndEfx_TapEvent);
+            _btnMode = (GHI.Glide.UI.Button)_mainWindow.GetChildByName("btnMode");
+            _btnMode.TapEvent += new OnTap(btnMode_TapEvent);
 
-            _btnTalk = (GHI.Glide.UI.Button)_mainWindow.GetChildByName("btnTalk");
-            _btnTalk.TapEvent += new OnTap(btnTalk_TapEvent);
-
-            _btnVideo = (GHI.Glide.UI.Button)_mainWindow.GetChildByName("btnVideo");
-            _btnVideo.TapEvent += new OnTap(btnVideo_TapEvent);
-
-            _btnCamera = (GHI.Glide.UI.Button)_mainWindow.GetChildByName("btnCamera");
-            _btnCamera.TapEvent += new OnTap(btnCamera_TapEvent);
+            _btnInputs = (GHI.Glide.UI.Button)_mainWindow.GetChildByName("btnInputs");
+            _btnInputs.TapEvent += new OnTap(btnInputs_TapEvent);
         }
 
         /// <summary>
@@ -347,14 +414,49 @@ namespace OakhillLandroverController
         /// </summary>
         static void RoverJoystickControlTimer_Tick(object temp)
         {
-            //get check box accessories
-            //Array.Copy(byteToHex(getChkBoxAccessories()), 0, ps2Data, 4, 2);
-            Array.Copy(byteToHex((byte)(convertLinearScale(steeringWheelAnalog.ReadRaw(), steeringWheelMin ,steeringWheelMax, 0, 255))), 0, ps2Data, 5, 2);
-            Array.Copy(byteToHex(triggerSpeedCmd()), 0, ps2Data, 8, 2);                    
+            switch (DRIVE_MODE_ROVER)
+            {
+                case DRIVE_MODE.MANUAL:
 
-            //get checksum
-            Array.Copy(byteToHex(getChecksum(Encoding.UTF8.GetBytes(new string(ps2Data)))), 0, ps2Data, 14, 2);
-            lairdComPort.Write(Encoding.UTF8.GetBytes(new string(ps2Data)), 0, ps2Data.Length);
+                    //get check box accessories
+                    //Array.Copy(byteToHex(getChkBoxAccessories()), 0, ps2Data, 4, 2);
+                    Array.Copy(byteToHex((byte)(convertLinearScale(steeringWheelAnalog.ReadRaw(), steeringWheelMin, steeringWheelMax, 0, 255))), 0, manualCmdOutput, 5, 2);
+                    Array.Copy(byteToHex(triggerSpeedCmd()), 0, manualCmdOutput, 8, 2);
+
+                    //get checksum
+                    Array.Copy(byteToHex(getChecksum(Encoding.UTF8.GetBytes(new string(manualCmdOutput)))), 0, manualCmdOutput, 14, 2);
+                    lairdComPort.Write(Encoding.UTF8.GetBytes(new string(manualCmdOutput)), 0, manualCmdOutput.Length);
+                    //Debug.Print(new string(manualCmdOutput));
+
+                    break;
+
+                case DRIVE_MODE.AUTO:
+
+                    //Array.Copy(byteToHex((byte)DRIVE_MODE_ROVER), 0, autoCmdOutput, 5, 2);
+
+                    //get checksum
+                    Array.Copy(byteToHex(getChecksum(Encoding.UTF8.GetBytes(new string(autoCmdOutput)))), 0, autoCmdOutput, 8, 2);
+
+                    lairdComPort.Write(Encoding.UTF8.GetBytes(new string(autoCmdOutput)), 0, autoCmdOutput.Length);
+                    //Debug.Print(new string(autoCmdOutput));
+
+                    break;
+
+                case DRIVE_MODE.COMPASS:
+
+                    //get checksum
+                    Array.Copy(byteToHex(getChecksum(Encoding.UTF8.GetBytes(new string(compassCmdOutput)))), 0, compassCmdOutput, 8, 2);
+
+                    lairdComPort.Write(Encoding.UTF8.GetBytes(new string(compassCmdOutput)), 0, compassCmdOutput.Length);
+                    
+                    //'$','O','C','C',','  
+                    //   ,'0','0',        //bytes 5,6    get byte 1
+                    //   ,'*'
+                    //   ,'0','0'
+                    //   ,0x0D,0x0A};
+
+                    break;
+            }
 
             SYSTEM_LED = !SYSTEM_LED;
             onBoardLed.Write(SYSTEM_LED);
@@ -374,22 +476,28 @@ namespace OakhillLandroverController
 
             if (joystickLevel > 200)
             {
-                picCounter = (picCounter + 1) % sdCardJpgFileNames.Length;
-                fileStream = new FileStream(sdCardJpgFileNames[picCounter], FileMode.Open);
+                try
+                {
+                    picCounter = (picCounter + 1) % sdCardJpgFileNames.Length;
+                    fileStream = new FileStream(sdCardJpgFileNames[picCounter], FileMode.Open);
 
-                //load the data from the stream
-                data = new byte[fileStream.Length];
-                fileStream.Read(data, 0, data.Length);
+                    //load the data from the stream
+                    data = new byte[fileStream.Length];
+                    fileStream.Read(data, 0, data.Length);
 
-                myPic = new Bitmap(data, Bitmap.BitmapImageType.Jpeg);
+                    myPic = new Bitmap(data, Bitmap.BitmapImageType.Jpeg);
 
-                image = (GHI.Glide.UI.Image)pictureWindow.GetChildByName("imgPicture");
-                //image.Bitmap = Resources.GetBitmap(Resources.BitmapResources.logo);
-                image.Bitmap.DrawImage(0, 0, myPic, 0, 0, 320, 240);
+                    image = (GHI.Glide.UI.Image)pictureWindow.GetChildByName("imgPicture");
+                    //image.Bitmap = Resources.GetBitmap(Resources.BitmapResources.logo);
+                    image.Bitmap.DrawImage(0, 0, myPic, 0, 0, 320, 240);
 
-                fileStream.Close();
+                    fileStream.Close();
 
-                image.Invalidate();
+
+                    image.Invalidate();
+
+                }
+                catch { }
 
                 Thread.Sleep(500);
             }
@@ -415,11 +523,11 @@ namespace OakhillLandroverController
                 quadPowerBuffer.LoadSerial(quadPowerComPort);
                 if ((quadPowerDataLine = quadPowerBuffer.ReadLine()) != null)
                 {
-                    string[] tempStrArr = quadPowerDataLine.Split(new char[] { ',' });
-                    string chgStateStr = "";
-
                     try
                     {
+                        string[] tempStrArr = quadPowerDataLine.Split(new char[] { ',' });
+                        string chgStateStr = "";
+
                         if ((tempStrArr[2] == "PCH") || (tempStrArr[2] == "DCH") || (tempStrArr[2] == "FCH")) chgStateStr = "+";
 
                         _txtCntrlBattery.Text = "Battery: " + chgStateStr + tempStrArr[5] + "%";
@@ -436,53 +544,113 @@ namespace OakhillLandroverController
                 try
                 {
                     //verify checksum
-                    if ((byte)(Convert.ToInt32(roverDataLine.Substring(roverDataLine.IndexOf('*')+1, 2),16)) == getChecksum(Encoding.UTF8.GetBytes(roverDataLine)))
+                    if ((byte)(Convert.ToInt32(roverDataLine.Substring(roverDataLine.IndexOf('*') + 1, 2), 16)) == getChecksum(Encoding.UTF8.GetBytes(roverDataLine)))
                     {
-                        string[] splitRoverData = roverDataLine.Split(new char[] { ',','*' });
+                        string[] splitRoverData = roverDataLine.Split(new char[] { ',', '*' });
 
-                        _txtRoverBattery.Text = "  Rover: " + splitRoverData[1] + " " + splitRoverData[2];                       
-                        _mainWindow.FillRect(_txtRoverBattery.Rect);
-                        _txtRoverBattery.Invalidate();
+                        switch (splitRoverData[0])
+                        {
+                            case "$ORD": //rover in manual mode data
+                                _txtRoverBatteryOut.Text = splitRoverData[1] + " " + splitRoverData[2];
+                                _mainWindow.FillRect(_txtRoverBatteryOut.Rect);
+                                _txtRoverBatteryOut.Invalidate();
 
-                        _txtRoverRange.Text = "  Range: " + splitRoverData[3];
-                        _mainWindow.FillRect(_txtRoverRange.Rect);
-                        _txtRoverRange.Invalidate();
+                                _txtRoverRangeOut.Text = splitRoverData[3];
+                                _mainWindow.FillRect(_txtRoverRangeOut.Rect);
+                                _txtRoverRangeOut.Invalidate();
 
-                        _txtRoverHeading.Text = "Heading: " + splitRoverData[4];
-                        _mainWindow.FillRect(_txtRoverHeading.Rect);
-                        _txtRoverHeading.Invalidate();
+                                _txtRoverHeadingOut.Text = splitRoverData[4] + " deg";
+                                _mainWindow.FillRect(_txtRoverHeadingOut.Rect);
+                                _txtRoverHeadingOut.Invalidate();
 
-                        _txtRoverTemp.Text = "Temp: " + splitRoverData[5];
-                        _mainWindow.FillRect(_txtRoverTemp.Rect);
-                        _txtRoverTemp.Invalidate();
+                                _txtRoverTempOut.Text = splitRoverData[5];
+                                _mainWindow.FillRect(_txtRoverTempOut.Rect);
+                                _txtRoverTempOut.Invalidate();
 
-                        _txtRoverPress.Text = "Press: " + splitRoverData[6];
-                        _mainWindow.FillRect(_txtRoverPress.Rect);
-                        _txtRoverPress.Invalidate();
+                                _txtRoverPressOut.Text = splitRoverData[6];
+                                _mainWindow.FillRect(_txtRoverPressOut.Rect);
+                                _txtRoverPressOut.Invalidate();
 
-                        _txtRoverLat.Text = "Lat: " + splitRoverData[7];
-                        _mainWindow.FillRect(_txtRoverLat.Rect);
-                        _txtRoverLat.Invalidate();
+                                _txtRoverLatOut.Text = splitRoverData[7];
+                                _mainWindow.FillRect(_txtRoverLatOut.Rect);
+                                _txtRoverLatOut.Invalidate();
 
-                        _txtRoverLon.Text = "Lon: " + splitRoverData[8];
-                        _mainWindow.FillRect(_txtRoverLon.Rect);
-                        _txtRoverLon.Invalidate();
+                                _txtRoverLonOut.Text = splitRoverData[8];
+                                _mainWindow.FillRect(_txtRoverLonOut.Rect);
+                                _txtRoverLonOut.Invalidate();
 
-                        _pBarConnected.Value = 1;
-                        _mainWindow.FillRect(_pBarConnected.Rect);
-                        _pBarConnected.Invalidate();
+                                _txtRovModeOut.Text = splitRoverData[10];
+                                _mainWindow.FillRect(_txtRovModeOut.Rect);
+                                _txtRovModeOut.Invalidate();
 
-                        ////example output oakhill rover data
-                        //roverData = "$ORD," +
-                        //                    getBatteryVoltage().ToString() + " V"
-                        //            + "," + getBatteryCurrent().ToString() + " A"
-                        //            + "," + getRangeFwd() + " in"
-                        //            + "," + IMU_Adafruit.Heading + " deg"
-                        //            + "," + ((IMU_Adafruit.Bmp180.Temperature * 1.8000) + 32).ToString().Substring(0, 4) + " F"
-                        //            + "," + (IMU_Adafruit.Bmp180.Pressure / 6895).ToString().Substring(0, 4) + " psi"
-                        //    //+ "," + (1.0 - ((IMU_Adafruit.Bmp180.Pressure/101910)^.19)) //convert pressure to altitude in meters, 1019.1hPa as sealevel in Pawtucket
-                        //            + "*";
+                                _pBarConnected.Value = 1;
+                                _mainWindow.FillRect(_pBarConnected.Rect);
+                                _pBarConnected.Invalidate();
 
+                                ////example output oakhill rover data
+                                //roverData = "$ORD," +
+                                //                                   getBatteryVoltage() + " V"
+                                //                           + "," + getBatteryCurrent() + " A"
+                                //                           + "," + getSonarRangeAvg() + " in"
+                                //                           + "," + IMU_Adafruit.Heading + " deg"
+                                //                           + "," + ((IMU_Adafruit.Bmp180.Temperature * 1.8000) + 32).ToString().Substring(0, 4) + " F"
+                                //                           + "," + (IMU_Adafruit.Bmp180.Pressure / 6895).ToString().Substring(0, 4) + " psi"
+                                //                           + "," + roverGPS.MapLatitude
+                                //                           + "," + roverGPS.MapLongitude
+                                //                           + "," + roverGPS.FixAvailable
+                                //                           + "," + ((byte)ROVER_DRIVE_MODE).ToString()
+
+                                //                           //+ "," + (1.0 - ((IMU_Adafruit.Bmp180.Pressure/101910)^.19)) //convert pressure to altitude in meters, 1019.1hPa as sealevel in Pawtucket
+                                //                           + "*";
+                                break;
+
+                            case "$ORS"://rover in safety assist mode
+                                break;
+
+                            case "$ORA": //rover in autonomous mode
+
+                                _txtRoverRangeOut.Text =  splitRoverData[1];
+                                _mainWindow.FillRect(_txtRoverRangeOut.Rect);
+                                _txtRoverRangeOut.Invalidate();
+
+                                _txtRoverHeadingOut.Text =  splitRoverData[2];
+                                _mainWindow.FillRect(_txtRoverHeadingOut.Rect);
+                                _txtRoverHeadingOut.Invalidate();
+
+                                _txtRoverLatOut.Text =  splitRoverData[3];
+                                _mainWindow.FillRect(_txtRoverLatOut.Rect);
+                                _txtRoverLatOut.Invalidate();
+
+                                _txtRoverLonOut.Text = splitRoverData[4];
+                                _mainWindow.FillRect(_txtRoverLonOut.Rect);
+                                _txtRoverLonOut.Invalidate();
+
+                                _txtWpDistOut.Text = splitRoverData[5];
+                                _mainWindow.FillRect(_txtWpDistOut.Rect);
+                                _txtWpDistOut.Invalidate();
+
+                                _txtTargetHeadOut.Text = splitRoverData[6];
+                                _mainWindow.FillRect(_txtTargetHeadOut.Rect);
+                                _txtTargetHeadOut.Invalidate();
+
+                                _txtTargetWpNumOut.Text = splitRoverData[7];
+                                _mainWindow.FillRect(_txtTargetWpNumOut.Rect);
+                                _txtTargetWpNumOut.Invalidate();
+
+                                _txtWpSpeedDirOut.Text = splitRoverData[8] + "," + splitRoverData[9];
+                                _mainWindow.FillRect(_txtWpSpeedDirOut.Rect);
+                                _txtWpSpeedDirOut.Invalidate();
+
+                                _txtRovModeOut.Text = splitRoverData[10];
+                                _mainWindow.FillRect(_txtRovModeOut.Rect);
+                                _txtRovModeOut.Invalidate();
+
+                                _pBarConnected.Value = 1;
+                                _mainWindow.FillRect(_pBarConnected.Rect);
+                                _pBarConnected.Invalidate();
+
+                                break;
+                        }
                     }
                 }
                 catch (Exception)
@@ -547,9 +715,9 @@ namespace OakhillLandroverController
             RoverJoystickControlTimer.Change(-1, -1); //stop timer
             UpdateMainWindowTimer.Change(-1, -1); //stop timer
             
-            Tween.SlideWindow(_mainWindow, diagnosticWindow._window, GHI.Glide.Direction.Left);
+            Tween.SlideWindow(_mainWindow, setupWindow._window, GHI.Glide.Direction.Left);
 
-            diagnosticWindow.DiagnosticWindowTimer.Change(0, SetupWindow.diagnosticWindowTimerPeriod);
+            setupWindow.DiagnosticWindowTimer.Change(0, SetupWindow.diagnosticWindowTimerPeriod);
         }
 
         // Handles the pictures button tap event.
@@ -615,37 +783,61 @@ namespace OakhillLandroverController
 
         }
 
-        // Handles the next button tap event.
-        static void btnGndEfx_TapEvent(object sender)
+        /// <summary>
+        /// Moves to screen with all output instruments
+        /// </summary>
+        /// <param name="sender"></param>
+        static void btnOutputs_TapEvent(object sender)
         {
             RoverJoystickControlTimer.Change(-1, -1); //stop timer
             UpdateMainWindowTimer.Change(-1, -1); //stop timer
 
-            Tween.SlideWindow(_mainWindow, gEfxWindow._window, GHI.Glide.Direction.Left);
-        }
-
-        // Handles the next button tap event.
-        static void btnTalk_TapEvent(object sender)
-        {
-
+            Tween.SlideWindow(_mainWindow, outputsWindow._window, GHI.Glide.Direction.Left);
         }
 
         /// <summary>
         /// Handle button video tap event.
         /// </summary>
         /// <param name="sender"></param>
-        static void btnVideo_TapEvent(object sender)
+        static void btnMode_TapEvent(object sender)
         {
+            //RoverJoystickControlTimer.Change(-1, -1); //stop timer
+            //UpdateMainWindowTimer.Change(-1, -1); //stop timer
 
+            //DRIVE_MODE_ROVER = (DRIVE_MODE)(((int)DRIVE_MODE_ROVER + 1) % (int)DRIVE_MODE.LIMIT);
+
+            //switch (DRIVE_MODE_ROVER)
+            //{
+            //    case DRIVE_MODE.MANUAL:
+            //        _btnMode.Text = "Manual";
+            //        break;
+
+            //    case DRIVE_MODE.AUTO:
+            //        _btnMode.Text = "Auto";
+            //        break;
+
+            //    case DRIVE_MODE.COMPASS:
+            //        _btnMode.Text = "Compass";
+            //        break;
+            //}
+
+            //_mainWindow.FillRect(_btnMode.Rect);
+            //_btnMode.Invalidate();
+
+            //Program.RoverJoystickControlTimer.Change(0, Program.RoverJoystickTimerPeriod);
+            //Program.UpdateMainWindowTimer.Change(0, Program.UpdateMainWindowTimerPeriod);
         }
 
-        // Handles the next button tap event.
-        static void btnCamera_TapEvent(object sender)
+        /// <summary>
+        /// Activates screen with input devices
+        /// </summary>
+        /// <param name="sender"></param>
+        static void btnInputs_TapEvent(object sender)
         {
-            RoverJoystickControlTimer.Change(-1, -1); //stop timer
-            UpdateMainWindowTimer.Change(-1, -1); //stop timer
+            //RoverJoystickControlTimer.Change(-1, -1); //stop timer
+            //UpdateMainWindowTimer.Change(-1, -1); //stop timer
 
-            Tween.SlideWindow(_mainWindow, ecoCamWindow._window, GHI.Glide.Direction.Left);
+            //Tween.SlideWindow(_mainWindow, ecoCamWindow._window, GHI.Glide.Direction.Left);
         }
 
         #endregion

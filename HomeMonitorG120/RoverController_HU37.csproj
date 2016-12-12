@@ -32,7 +32,7 @@
   <ItemGroup>
     <Compile Include="DisplayNHD5.cs" />
     <Compile Include="EcoCamWindow.cs" />
-    <Compile Include="GroundEfxWindow.cs" />
+    <Compile Include="OutputsWindow.cs" />
     <Compile Include="HomeMonitorException.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -78,7 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\wndSetup.txt" />
-    <None Include="Resources\GroundEfx_Window.txt" />
+    <None Include="Resources\wndOutputs.txt" />
     <None Include="Resources\EcoCam_Window.txt" />
     <Content Include="Resources\wndCapture.txt" />
     <None Include="Resources\Keyboard\Keyboard_320x128_Up_Uppercase.gif" />

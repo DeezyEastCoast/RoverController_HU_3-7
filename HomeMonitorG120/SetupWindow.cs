@@ -34,6 +34,8 @@ namespace OakhillLandroverController
         TextBlock _txtBlSpeedLimit;
 
         Button _btnBackSetup;
+        Button _btnMode;
+
         CheckBox _chkBoxSpeedLimit;
 
         #endregion
@@ -68,11 +70,14 @@ namespace OakhillLandroverController
            _txtBlWhlScaled = (TextBlock)_window.GetChildByName("txtBlWhlScaled");
            _txtBlSpeedLimit = (TextBlock)_window.GetChildByName("txtBlSpeedLimit");
 
-            _chkBoxSpeedLimit = (CheckBox)_window.GetChildByName("chkBoxSpeedLimit");
-            _chkBoxSpeedLimit.TapEvent += _chkBoxSpeedLimit_TapEvent;
+           _chkBoxSpeedLimit = (CheckBox)_window.GetChildByName("chkBoxSpeedLimit");
+           _chkBoxSpeedLimit.TapEvent += _chkBoxSpeedLimit_TapEvent;
 
            _btnBackSetup = (Button)_window.GetChildByName("btnBack");
            _btnBackSetup.TapEvent += new OnTap(btnBackSetup_TapEvent);
+
+           _btnMode = (Button)_window.GetChildByName("btnMode");
+           _btnMode.TapEvent += new OnTap(btnMode_TapEvent);
 
            DiagnosticWindowTimer = new Timer(new TimerCallback(SetupWindowTimer_Tick), null, -1, diagnosticWindowTimerPeriod);
         }
@@ -113,7 +118,34 @@ namespace OakhillLandroverController
         }
 
         /// <summary>
-        /// Ground effects window back button tap event.
+        /// Setup window back button tap event.
+        /// </summary>
+        /// <param name="sender"></param>
+        void btnMode_TapEvent(object sender)
+        {
+            Program.DRIVE_MODE_ROVER = (Program.DRIVE_MODE)(((int)Program.DRIVE_MODE_ROVER + 1) % (int)Program.DRIVE_MODE.LIMIT);
+
+            switch (Program.DRIVE_MODE_ROVER)
+            {
+                case Program.DRIVE_MODE.MANUAL:
+                    _btnMode.Text = "Manual";
+                    break;
+
+                case Program.DRIVE_MODE.AUTO:
+                    _btnMode.Text = "Auto";
+                    break;
+
+                case Program.DRIVE_MODE.COMPASS:
+                    _btnMode.Text = "Compass";
+                    break;
+            }
+
+            _window.FillRect(_btnMode.Rect);
+            _btnMode.Invalidate();
+        }
+
+        /// <summary>
+        /// Setup window back button tap event.
         /// </summary>
         /// <param name="sender"></param>
         void btnBackSetup_TapEvent(object sender)

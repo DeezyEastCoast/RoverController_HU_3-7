@@ -121,9 +121,6 @@
   <data name="EcoCam_Window" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\EcoCam_Window.txt;System.String, mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null;Windows-1252</value>
   </data>
-  <data name="GroundEfx_Window" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\GroundEfx_Window.txt;System.String, mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null;Windows-1252</value>
-  </data>
   <data name="Keyboard_320x128_Down_Lowercase" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Keyboard\Keyboard_320x128_Down_Lowercase.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -159,6 +156,9 @@
   </data>
   <data name="wndMain" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\wndMain.txt;System.String, mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null;Windows-1252</value>
+  </data>
+  <data name="wndOutputs" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\wndOutputs.txt;System.String, mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null;Windows-1252</value>
   </data>
   <data name="wndSetup" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\wndSetup.txt;System.String, mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null;Windows-1252</value>
